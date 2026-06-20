@@ -73,6 +73,21 @@ echo Using: !PYEXE!
 "!PYEXE!" --version
 echo.
 
+REM ── Ensure pip is available (bootstrap if missing) ─
+"!PYEXE!" -m pip --version >nul 2>&1
+if errorlevel 1 (
+    echo pip not found - bootstrapping it now...
+    "!PYEXE!" -m ensurepip --upgrade
+    if errorlevel 1 (
+        echo ERROR: Could not bootstrap pip.
+        echo        Try reinstalling Python from https://python.org and make sure
+        echo        "pip" is ticked during installation.
+        pause & exit /b 1
+    )
+    echo pip bootstrapped successfully.
+    echo.
+)
+
 REM ── Step 2: Install Python packages ──────────────
 echo [1/3] Installing build dependencies (pdfplumber, PyPDF2, pyinstaller)...
 "!PYEXE!" -m pip install --upgrade pip --quiet
